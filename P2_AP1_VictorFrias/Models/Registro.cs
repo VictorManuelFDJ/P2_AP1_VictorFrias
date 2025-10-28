@@ -8,5 +8,8 @@ namespace P2_AP1_VictorFrias.Models
         public int Id { get; set; }
 
         public string nombre { get; set; }
+
+        [Required]
+        public DateTime Fecha { get; set; } = DateTime.Now;
     }
 }
