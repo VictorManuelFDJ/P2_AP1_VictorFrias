@@ -16,17 +16,17 @@ namespace P2_AP1_VictorFrias.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
 
-            modelBuilder.Entity("P2_AP1_VictorFrias.Models.Registro", b =>
+            modelBuilder.Entity("P2_AP1_VictorFrias.Models.Pedidos", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("PedidosId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("nombre")
+                    b.Property<string>("NombreCliente")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("PedidosId");
 
                     b.ToTable("Registros");
                 });
