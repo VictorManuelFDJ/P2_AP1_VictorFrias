@@ -14,4 +14,49 @@ public class Contexto : DbContext
     {
 
     }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Componente>().HasData(
+            new List<Componente>()
+            {
+            new()
+            {
+                ComponenteId = 1,
+                Descripcion = "Teclado",
+                Existencia = 0,
+            },
+            new()
+            {
+                ComponenteId = 2,
+                Descripcion = "Procesador",
+                Existencia = 0,
+            },
+            new()
+            {
+                ComponenteId = 3,
+                Descripcion = "HDI",
+                Existencia = 0,
+            },
+            new()
+            {
+                ComponenteId = 4,
+                Descripcion = "Cable sata",
+                Existencia = 0,
+            },
+            new()
+            {
+                ComponenteId = 5,
+                Descripcion = "Ram",
+                Existencia = 0,
+            },
+            new()
+            {
+                ComponenteId = 6,
+                Descripcion = "Disco duro",
+                Existencia = 0,
+            }
+            }
+        );
+        base.OnModelCreating(modelBuilder);
+    }
 }
