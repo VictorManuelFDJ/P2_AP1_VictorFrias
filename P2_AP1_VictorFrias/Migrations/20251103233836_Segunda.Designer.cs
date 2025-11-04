@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using P2_AP1_VictorFrias.DAL;
 
@@ -10,9 +11,11 @@ using P2_AP1_VictorFrias.DAL;
 namespace P2_AP1_VictorFrias.Migrations
 {
     [DbContext(typeof(Contexto))]
-    partial class ContextoModelSnapshot : ModelSnapshot
+    [Migration("20251103233836_Segunda")]
+    partial class Segunda
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -36,50 +39,6 @@ namespace P2_AP1_VictorFrias.Migrations
                     b.HasKey("ComponenteId");
 
                     b.ToTable("Componentes");
-
-                    b.HasData(
-                        new
-                        {
-                            ComponenteId = 1,
-                            Descripcion = "Teclado",
-                            Existencia = 0,
-                            Precio = 0m
-                        },
-                        new
-                        {
-                            ComponenteId = 2,
-                            Descripcion = "Procesador",
-                            Existencia = 0,
-                            Precio = 0m
-                        },
-                        new
-                        {
-                            ComponenteId = 3,
-                            Descripcion = "HDI",
-                            Existencia = 0,
-                            Precio = 0m
-                        },
-                        new
-                        {
-                            ComponenteId = 4,
-                            Descripcion = "Cable sata",
-                            Existencia = 0,
-                            Precio = 0m
-                        },
-                        new
-                        {
-                            ComponenteId = 5,
-                            Descripcion = "Ram",
-                            Existencia = 0,
-                            Precio = 0m
-                        },
-                        new
-                        {
-                            ComponenteId = 6,
-                            Descripcion = "Disco duro",
-                            Existencia = 0,
-                            Precio = 0m
-                        });
                 });
 
             modelBuilder.Entity("P2_AP1_VictorFrias.Models.Pedidos", b =>
