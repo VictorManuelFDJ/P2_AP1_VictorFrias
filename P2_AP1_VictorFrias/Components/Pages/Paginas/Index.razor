@@ -1,48 +1,44 @@
-﻿@page "/Modelo"
+﻿@page "/Pedidos"
 
-@inject ModeloService modeloService
+@inject PedidosServices pedidosService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Modelos</PageTitle>
+<PageTitle>Pedidos</PageTitle>
 
-<div class="container">
+<div class="container mt-4">
     <div class="card shadow-lg">
-        <div class="card-header space-between">
-            <h5 class="card-title">Registro De Modelo</h5>
-            <a href="/huacales/Create" class="btn btn-primary">
-                <span class="bi bi-plus-square mt-3"></span> Crear
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title m-0">Registro de Pedidos</h5>
+            <a href="/Pedidos/Create" class="btn btn-primary">
+                <i class="bi bi-plus-square"></i> Crear
             </a>
         </div>
 
         <div class="card-body">
-            <div class="row">
-                <div class="col-3">
-                    <label class="col-form-label"><strong>Filtrar por</strong></label>
-                </div>
-                <div class="col-4">
-                    <label class="col-form-label"><strong>Búsqueda</strong></label>
-                </div>
-            </div>
-
-            <div class="row align-items-center">
-                <div class="col-3">
-                    <InputSelect class="form-select" @bind-Value="Filtro">
-                        <option value="" selected disabled>Seleccione</option>
-                        <option value="Id">Id</option>
-                        <option value="nombre">Nombre</option>
-                    </InputSelect>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label><strong>Nombre del cliente</strong></label>
+                    <InputText class="form-control" @bind-Value="FiltroNombre" placeholder="Buscar por nombre..." />
                 </div>
 
-                <div class="col-4">
-                    <div class="input-group">
-                        <input class="form-control" @bind="ValorFiltro" placeholder="Buscar" />
-                        <button type="button" class="btn btn-outline-primary bi bi-search" @onclick="Buscar"></button>
-                    </div>
+                <div class="col-md-3">
+                    <label><strong>Desde</strong></label>
+                    <InputDate class="form-control" @bind-Value="FechaInicio" />
                 </div>
 
-                <div class="col-2">
-                    <button type="button" class="btn btn-outline-primary bi bi-arrow-counterclockwise" @onclick="Restablecer"></button>
+                <div class="col-md-3">
+                    <label><strong>Hasta</strong></label>
+                    <InputDate class="form-control" @bind-Value="FechaFin" />
+                </div>
+
+                <div class="col-md-2 d-flex align-items-center">
+                    <button type="button" class="btn btn-outline-primary mt-0 " @onclick="Buscar">
+                        <i class="bi bi-search"></i> 
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="Restablecer">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
                 </div>
             </div>
 
@@ -50,70 +46,60 @@
                 <thead class="table table-striped text-black">
                     <tr>
                         <th>Id</th>
-                        <th>Nombre</th>
+                        <th>Nombre Cliente</th>
                         <th>Fecha</th>
+                        <th>Total</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var modelo in ListaModelos)
+                    @if (ListaPedidos?.Any() == true)
                     {
-                        <tr>
-                            <td>@modelo.Id</td>
-                            <td>@modelo.nombre</td>
-                            <td>@modelo.Fecha.ToString("dd/MM/yyyy")</td>
-                            <td>
-                                <a href="/huacales/Edit/@modelo.Id" class="btn btn-outline-primary bi bi-pencil-square"></a>
-                            </td>
-                        </tr>
+                        @foreach (var pedido in ListaPedidos)
+                        {
+                            <tr>
+                                <td>@pedido.PedidosId</td>
+                                <td>@pedido.NombreCliente</td>
+                                <td>@pedido.Fecha.ToString("dd/MM/yyyy")</td>
+                                <td>@pedido.Total.ToString("C")</td>
+                                <td>
+                                    <a href="/Pedidos/Edit/@pedido.PedidosId" class="btn btn-outline-primary bi bi-pencil-square"></a>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
         </div>
-
-        <div class="card-footer space-between">
-        </div>
     </div>
 </div>
 
-<h3>ModeloIndexrazor</h3>
-
 @code {
-    private List<Pedidos> ListaModelos = new();
-    public string Filtro { get; set; } = string.Empty;
-    public string ValorFiltro { get; set; } = string.Empty;
+    private List<Pedidos> ListaPedidos = new();
+
+    public string FiltroNombre { get; set; } = string.Empty;
+    public DateTime? FechaInicio { get; set; }
+    public DateTime? FechaFin { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        ListaModelos = await modeloService.Listar(e => e.Id > 0);
+        ListaPedidos = await pedidosService.Listar(e => e.PedidosId > 0);
     }
 
     private async Task Buscar()
     {
-        if (string.IsNullOrWhiteSpace(Filtro) || string.IsNullOrWhiteSpace(ValorFiltro))
-        {
-            ListaModelos = await modeloService.Listar(e => e.Id > 0);
-            return;
-        }
-
-        if (Filtro == "PedidosId" && int.TryParse(ValorFiltro, out int id))
-        {
-            ListaModelos = await modeloService.Listar(e => e.Id == id);
-        }
-        else if (Filtro == "NombreCliente")
-        {
-            ListaModelos = await modeloService.Listar(e => e.nombre.Contains(ValorFiltro, StringComparison.OrdinalIgnoreCase));
-        }
-        else
-        {
-            ListaModelos = await modeloService.Listar(e => e.Id > 0);
-        }
+        ListaPedidos = await pedidosService.Listar(e =>
+            (string.IsNullOrWhiteSpace(FiltroNombre) || e.NombreCliente.ToLower().Contains(FiltroNombre.ToLower())) &&
+            (!FechaInicio.HasValue || e.Fecha >= FechaInicio.Value) &&
+            (!FechaFin.HasValue || e.Fecha <= FechaFin.Value)
+        );
     }
 
     private async Task Restablecer()
     {
-        ListaModelos = await modeloService.Listar(e => e.Id > 0);
-        Filtro = string.Empty;
-        ValorFiltro = string.Empty;
+        FiltroNombre = string.Empty;
+        FechaInicio = null;
+        FechaFin = null;
+        ListaPedidos = await pedidosService.Listar(e => e.PedidosId > 0);
     }
 }
